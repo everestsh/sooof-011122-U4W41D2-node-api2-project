@@ -3,6 +3,8 @@ const express = require('express')
 const router = express.Router()
 const Post = require('./posts-model')
 
+// [GET]   /api/posts
+// http get :9000/api/posts -v
 router.get('/', async (req, res)=>{
     // res.json({message: 'TEST: get /api/posts'})
     Post.find()
@@ -18,7 +20,9 @@ router.get('/', async (req, res)=>{
             })
         })
 })
-
+// [GET] /api/posts/:id
+// http get :9000/api/posts -v ; get id
+// http get :9000/api/posts/3 -v
 router.get('/:id', async (req, res)=>{
     // res.json({message: 'TEST: get /api/posts/:id '})
     try{
@@ -41,7 +45,8 @@ router.get('/:id', async (req, res)=>{
         })
     }
 })
-
+// [POST]   /api/posts
+// http post :9000/api/posts  title=ff contents=hhhhh  -v
 router.post('/', async (req, res)=>{
     // res.json({message: 'TEST: post /api/posts  '})
     const {title, contents} = req.body
@@ -65,7 +70,9 @@ router.post('/', async (req, res)=>{
         }
     }
 })
-
+// [PUT]    /api/posts/:id
+// http get :9000/api/posts  -v  ; to get id
+// http put :9000/api/posts/2  -v
 router.delete('/:id', async (req, res)=>{
     // res.json({message: 'TEST: delete /api/posts/:id '})
   
@@ -85,7 +92,9 @@ router.delete('/:id', async (req, res)=>{
         }) 
     }
 })
-
+// [DELETE] /api/posts/:id
+// http get :9000/api/posts  -v  ; to get id
+// http delete :9000/api/posts/3  -v
 router.put('/:id', async (req, res)=>{
     // res.json({message: 'TEST: put /api/posts/:id '})
     const {title, contents} = req.body
@@ -108,7 +117,8 @@ router.put('/:id', async (req, res)=>{
         }) 
     }
 })
-
+// [GET] /api/posts/:id/comments
+// http get :9000/api/posts/3/comments  -v
 router.get('/:id/comments', async (req, res)=>{
     // res.json({message: 'TEST: get /api/posts/:id/messages '})
     try{
