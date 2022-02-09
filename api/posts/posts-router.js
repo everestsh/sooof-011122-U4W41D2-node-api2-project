@@ -97,24 +97,57 @@ router.delete('/:id', async (req, res)=>{
 // http delete :9000/api/posts/3  -v
 router.put('/:id', async (req, res)=>{
     // res.json({message: 'TEST: put /api/posts/:id '})
-    const {title, contents} = req.body
-    try{
-        const passiblePost = await Post.findById(req.params.id)
-        if(!passiblePost){
-            res.status(404).json({message: "The post with the specified ID does not exist" })
-        }else if (!title || !contents){
-            res.status(400).json({message: "Please provide title and contents for the post"})
-        }else{
-            const udatePost = await Post.update(req.params.id, req.body)
-            const newPost = await Post.findById(req.params.id)
-            res.status(200).json(newPost)
-        }
-    }catch(err){
-        res.status(500).json({
-            message: "The post information could not be modified",
-            err: err.message,
-            stack: err.stack
-        }) 
+
+    // way 1
+    // const {title, contents} = req.body
+    // try{
+    //     const passiblePost = await Post.findById(req.params.id)
+    //     if(!passiblePost){
+    //         res.status(404).json({message: "The post with the specified ID does not exist" })
+    //     }else if (!title || !contents){
+    //         res.status(400).json({message: "Please provide title and contents for the post"})
+    //     }else{
+    //         const udatePost = await Post.update(req.params.id, req.body)
+    //         const newPost = await Post.findById(req.params.id)
+    //         res.status(200).json(newPost)
+    //     }
+    // }catch(err){
+    //     res.status(500).json({
+    //         message: "The post information could not be modified",
+    //         err: err.message,
+    //         stack: err.stack
+    //     }) 
+    // }
+
+    // way 2
+    const {title, contents} = req.body 
+    if(!title || !contents){
+        res.status(400).json({ message: "Please provide title and contents for the post"})
+    }else{
+        Post.findById(req.params.id)
+            .then(stuff =>{
+                if(!stuff){
+                    res.status(404).json( {message: "The post with the specified ID does not exist" } )
+                }else{
+                    return Post.update(req.params.id, req.body) 
+                }
+            })
+            .then(data=>{
+                console.log(data)
+                if(data){
+                    return Post.findById(req.params.id)
+                }
+            })
+            .then(post=>{
+                res.status(200).json(post)  
+            })
+            .catch(err=>{
+                res.status(500).json({
+                    message: "The post information could not be modified",
+                    err: err.message,
+                    stack: err.stack
+                })  
+            })
     }
 })
 // [GET] /api/posts/:id/comments
